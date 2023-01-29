@@ -3,7 +3,6 @@ import styled from "styled-components";
 import {useResizeDetector} from "react-resize-detector";
 
 import Board from "./Board";
-import {KlotskiPuzzle} from "./puzzle";
 
 const Container = styled.div`
   top: 2rem;
@@ -21,7 +20,7 @@ const App: FC = () => {
 
     return (
         <Container ref={ref}>
-            {(width && height) && <Board fitWidth={width} fitHeight={height} puzzle={KlotskiPuzzle}/>}
+            {(width && height) && <Board fitWidth={width} fitHeight={height}/>}
         </Container>
     );
 }

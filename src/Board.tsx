@@ -1,12 +1,10 @@
-import {FC, useState} from "react";
+import {FC} from "react";
 import styled from "styled-components";
-
-import {canMoveBlock, getBoardDimensions, moveBlock, MoveDirection, Puzzle} from "./puzzle";
+import {usePuzzle, BrickMovementDirection} from "./puzzle";
 
 interface BoardProps {
     fitWidth: number;
     fitHeight: number;
-    puzzle: Puzzle
 }
 
 const BoardGrid = styled.div<{ uw: number, uh: number, size: number }>`
@@ -26,19 +24,11 @@ const BoardCell = styled.div`
   font-size: 3rem;
 `;
 
-const Board: FC<BoardProps> = ({fitWidth, fitHeight, puzzle}) => {
-    const [board, setBoard] = useState(puzzle.board)
-    const [unitsWidth, unitsHeight] = getBoardDimensions(puzzle)
-    if (!unitsWidth || !unitsHeight) {
-        return (
-            <h1 color="red">Invalid board</h1>
-        );
-    }
-
-    const cellSize = Math.min(Math.ceil(fitWidth / unitsWidth), Math.ceil(fitHeight / unitsHeight))
+const Board: FC<BoardProps> = ({fitWidth, fitHeight}) => {
+    const puzzle = usePuzzle()
 
     const handleCellClick = (x: number, y: number, cellIndex: number) => {
-        let direction: MoveDirection | undefined = undefined
+        let direction: BrickMovementDirection | undefined = undefined
 
         const a = 20
         if (x >= a && x <= cellSize - a && y >= 0 && y <= a)
@@ -51,25 +41,20 @@ const Board: FC<BoardProps> = ({fitWidth, fitHeight, puzzle}) => {
             direction = "E"
 
         if (direction) {
-            const movable = canMoveBlock({...puzzle, board}, direction, cellIndex);
-            console.log(
-                board[cellIndex],
-                cellIndex,
-                direction,
-                movable
-            );
-
-            if (movable) {
-                setBoard(moveBlock({...puzzle, board}, direction, cellIndex))
-            }
+            puzzle.move(cellIndex, direction, 1)
         }
     }
 
+    const cellSize = Math.min(Math.ceil(fitWidth / puzzle.uw), Math.ceil(fitHeight / puzzle.uh))
+
     return (
-        <BoardGrid uh={unitsHeight} uw={unitsWidth} size={cellSize}>
-            {board.map((value, index) =>
+        <BoardGrid uh={puzzle.uh} uw={puzzle.uw} size={cellSize}>
+            {puzzle.board.map((value, index) =>
                 <BoardCell key={`cell-${index}`}
-                           onClick={e => {e.preventDefault(); handleCellClick(e.nativeEvent.offsetX, e.nativeEvent.offsetY, index)}}>{value}</BoardCell>
+                           onClick={e => {
+                               e.preventDefault();
+                               handleCellClick(e.nativeEvent.offsetX, e.nativeEvent.offsetY, index)
+                           }}>{value}</BoardCell>
             )}
         </BoardGrid>
     );

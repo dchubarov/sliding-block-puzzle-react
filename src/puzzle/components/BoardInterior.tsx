@@ -20,7 +20,7 @@ const BoardGrid = styled.div<Props>`
     pointer-events: none;
     background: ${process.env.REACT_APP_DEBUG === 'true' ? 'rgba(255, 0, 0, 0.5)' : 'transparent'};
   ` : css`
-    background-image: url("/puzzle/huarong/board.jpeg");
+    background-image: url("/puzzle/huarong/board.png");
     background-repeat: no-repeat;
     background-size: cover;
   `}
@@ -30,7 +30,7 @@ const BoardGridBrickCell = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  pointer-events: none; // crucial for correct mouse events handling
+  pointer-events: none; // crucial for correct mouse events handling in Board
   
   background-color: #bbb;
   font-size: 3rem;
@@ -38,7 +38,7 @@ const BoardGridBrickCell = styled.div`
 
 const BoardGridEmptyCell = styled.div`
   background: transparent;
-  pointer-events: none; // crucial for correct mouse events handling
+  pointer-events: none; // crucial for correct mouse events handling in Board
 `
 
 const BoardInterior = forwardRef<HTMLDivElement, Props>((props, ref) => {

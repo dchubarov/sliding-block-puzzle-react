@@ -20,7 +20,9 @@ const BoardGrid = styled.div<Props>`
     pointer-events: none;
     background: ${process.env.REACT_APP_DEBUG === 'true' ? 'rgba(255, 0, 0, 0.5)' : 'transparent'};
   ` : css`
-    background: #eee;
+    background-image: url("/puzzle/huarong/board.jpeg");
+    background-repeat: no-repeat;
+    background-size: cover;
   `}
 `
 

@@ -15,12 +15,16 @@ export function isEmptyBoardElement(s: BoardElement) {
     return (!s || !s.trim())
 }
 
-function brickCoordinatesToIndex(puzzle: Puzzle, x: number, y: number) {
-    return y * puzzle.uw + x
+export function brickCoordinatesToIndex(puzzle: Puzzle, x: number, y: number) {
+    return (x >= 0 && x < puzzle.uw && y >= 0 && y < puzzle.uh) ?
+        y * puzzle.uw + x :
+        undefined;
 }
 
 function brickIndexToCoordinates(puzzle: Puzzle, index: number) {
-    return [index % puzzle.uw, Math.floor(index / puzzle.uw)]
+    return (index >= 0 && index < puzzle.board.length) ?
+        [index % puzzle.uw, Math.floor(index / puzzle.uw)] :
+        [undefined, undefined];
 }
 
 export function brickCanMove(puzzle: Puzzle, index: number, direction: BrickMovementDirection): number {
@@ -30,12 +34,13 @@ export function brickCanMove(puzzle: Puzzle, index: number, direction: BrickMove
     let minMoveAmount = (direction === "N" || direction === "S") ? puzzle.uh : puzzle.uw;
     const isClear = (x: number, y: number) => {
         const n = brickCoordinatesToIndex(puzzle, x, y)
-        return puzzle.board[n] === brick || isEmptyBoardElement(puzzle.board[n])
+        return puzzle.board[n!] === brick || isEmptyBoardElement(puzzle.board[n!])
     }
 
     for (let i = 0; i < puzzle.board.length; i++) {
         if (puzzle.board[i] !== brick) continue
         const [bx, by] = brickIndexToCoordinates(puzzle, i);
+        if (bx === undefined || by === undefined) return 0
         let moveAmount = 0
 
         switch (direction) {

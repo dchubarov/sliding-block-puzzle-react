@@ -1,5 +1,5 @@
 import {FC, useEffect, useRef, useState} from "react";
-import Puzzle, {brickCoordinatesToIndex, isEmptyBoardElement} from "../puzzle";
+import Puzzle, {brickCanMove, brickCoordinatesToIndex, BrickMovementDirection, isEmptyBoardElement} from "../puzzle";
 import BoardInterior from "./BoardInterior";
 
 interface Props {
@@ -12,6 +12,10 @@ interface SlideState {
     cellIndex: number
     originX: number
     originY: number
+    limitN: number
+    limitW: number
+    limitS: number
+    limitE: number
 }
 
 const Board: FC<Props> = ({puzzle, fitWidth, fitHeight}) => {
@@ -37,9 +41,12 @@ const Board: FC<Props> = ({puzzle, fitWidth, fitHeight}) => {
                     cellIndex: cellIndex,
                     originX: e.clientX,
                     originY: e.clientY,
+                    limitN: -cellSize * brickCanMove(puzzle, cellIndex, "N"),
+                    limitW: -cellSize * brickCanMove(puzzle, cellIndex, "W"),
+                    limitS: cellSize * brickCanMove(puzzle, cellIndex, "S"),
+                    limitE: cellSize * brickCanMove(puzzle, cellIndex, "E"),
                 });
             }
-
         }
 
         element.addEventListener("mousedown", handleMouseDown);
@@ -51,16 +58,37 @@ const Board: FC<Props> = ({puzzle, fitWidth, fitHeight}) => {
     useEffect(() => {
         if (!slideState) return;
 
+        let moveDirection: BrickMovementDirection | undefined = undefined;
+        let moveAmount = 0;
+
         const handleMouseMove = (e: MouseEvent) => {
-            const dx = e.clientX - slideState.originX;
-            const dy = e.clientY - slideState.originY;
+            e.preventDefault();
+
             if (overlayRef.current) {
-                overlayRef.current.style.marginLeft = `${dx}px`
-                overlayRef.current.style.marginTop = `${dy}px`
+                const dx = (e.clientX - slideState.originX);
+                const dy = (e.clientY - slideState.originY);
+
+                if (Math.abs(dy) > Math.abs(dx)) {
+                    let margin = dy > 0 ? Math.min(dy, slideState.limitS) : Math.max(dy, slideState.limitN);
+                    overlayRef.current.style.marginTop = `${margin}px`
+                    overlayRef.current.style.marginBottom = `${-margin}px`
+                    moveAmount = Math.round(Math.abs(margin)/cellSize);
+                    moveDirection = dy > 0 ? "S" : "N";
+                } else {
+                    let margin = dx > 0 ? Math.min(dx, slideState.limitE) : Math.max(dx, slideState.limitW);
+                    overlayRef.current.style.marginLeft = `${margin}px`
+                    overlayRef.current.style.marginRight = `${-margin}px`
+                    moveAmount = Math.round(Math.abs(margin)/cellSize);
+                    moveDirection = dx > 0 ? "E" : "W";
+                }
             }
         }
 
         const handleMouseUp = (e: MouseEvent) => {
+            e.preventDefault();
+            if (moveDirection && moveAmount > 0) {
+                puzzle.move(slideState.cellIndex, moveDirection, moveAmount);
+            }
             setSlideState(undefined);
         }
 
@@ -76,7 +104,7 @@ const Board: FC<Props> = ({puzzle, fitWidth, fitHeight}) => {
             window.removeEventListener("mouseup", handleMouseUp);
             window.removeEventListener("mousemove", handleMouseMove);
         }
-    }, [slideState]);
+    }, [puzzle, cellSize, slideState]);
 
     return (
         <>

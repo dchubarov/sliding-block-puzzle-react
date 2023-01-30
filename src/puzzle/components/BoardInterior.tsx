@@ -18,9 +18,9 @@ const BoardGrid = styled.div<Props>`
   ${props => props.overlay ? css`
     position: fixed;
     pointer-events: none;
-    background-color: rgba(255, 0, 0, 0.5);
+    background: ${process.env.REACT_APP_DEBUG === 'true' ? 'rgba(255, 0, 0, 0.5)' : 'transparent'};
   ` : css`
-    background-color: #eee;
+    background: #eee;
   `}
 `
 
@@ -29,7 +29,7 @@ const BoardGridBrickCell = styled.div`
   align-items: center;
   justify-content: center;
   pointer-events: none; // crucial for correct mouse events handling
-
+  
   background-color: #bbb;
   font-size: 3rem;
 `

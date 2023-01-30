@@ -11,7 +11,7 @@ export default interface Puzzle {
     move(index: number, direction: BrickMovementDirection, amount: number): void
 }
 
-function isEmptyBoardElement(s: BoardElement) {
+export function isEmptyBoardElement(s: BoardElement) {
     return (!s || !s.trim())
 }
 

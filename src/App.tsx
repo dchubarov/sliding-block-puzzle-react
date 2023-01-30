@@ -1,8 +1,8 @@
 import {FC} from 'react';
 import styled from "styled-components";
 import {useResizeDetector} from "react-resize-detector";
-
-import Board from "./Board";
+import Board from "./puzzle/components/Board";
+import {usePuzzle} from "./puzzle";
 
 const Container = styled.div`
   top: 2rem;
@@ -17,10 +17,11 @@ const Container = styled.div`
 
 const App: FC = () => {
     const {width, height, ref} = useResizeDetector();
+    const puzzle = usePuzzle();
 
     return (
         <Container ref={ref}>
-            {(width && height) && <Board fitWidth={width} fitHeight={height}/>}
+            {(!!width && !!height) && <Board puzzle={puzzle} fitWidth={width} fitHeight={height}/>}
         </Container>
     );
 }

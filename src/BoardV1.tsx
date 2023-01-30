@@ -24,7 +24,7 @@ const BoardCell = styled.div`
   font-size: 3rem;
 `;
 
-const Board: FC<BoardProps> = ({fitWidth, fitHeight}) => {
+const BoardV1: FC<BoardProps> = ({fitWidth, fitHeight}) => {
     const puzzle = usePuzzle()
 
     const handleCellClick = (x: number, y: number, cellIndex: number) => {
@@ -60,4 +60,4 @@ const Board: FC<BoardProps> = ({fitWidth, fitHeight}) => {
     );
 };
 
-export default Board;
+export default BoardV1;

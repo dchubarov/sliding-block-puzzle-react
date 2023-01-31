@@ -31,8 +31,8 @@ const PuzzlePresets = {
             uw: 4,
             board: generateRandomBoard(),
             brickStyle: {
-                foregroundColor: "#C5EAFF",
-                backgroundImage: "brick.png",
+                foregroundColor: "#454545",
+                backgroundImage: "tile.png",
                 backgroundColor: "transparent",
                 showContents: true,
             }

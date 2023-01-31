@@ -18,7 +18,7 @@ const Container = styled.div`
 
 const App: FC = () => {
     const {width, height, ref} = useResizeDetector();
-    const [preset, ] = useState<PuzzlePresetName>("fifteen")
+    const [preset, ] = useState<PuzzlePresetName>("huarong")
     const puzzle = usePuzzlePreset(preset);
 
     return (

@@ -2,6 +2,7 @@ import Puzzle, {brickCanMove, moveBrick} from "./puzzle";
 
 test("simple brick movability", () => {
     const puzzle: Puzzle = {
+        name: "test",
         board: [
             "LT", "", "", "RT",
             "", "", "X", "",
@@ -10,7 +11,6 @@ test("simple brick movability", () => {
         ],
         uw: 4,
         uh: 4,
-        move: () => {},
     }
 
     // empty cell is always unmovable
@@ -50,6 +50,7 @@ test("simple brick movability", () => {
 
 test("compound brick movability", () => {
     const puzzle: Puzzle = {
+        name: "test",
         board: [
             " ", " ", " ", " ", " ",
             " ", "X", " ", "O", "O",
@@ -58,7 +59,6 @@ test("compound brick movability", () => {
         ],
         uw: 5,
         uh: 4,
-        move: () => {},
     }
 
     // test moving compound brick (O)
@@ -70,6 +70,7 @@ test("compound brick movability", () => {
 
 test("move brick", () => {
     const puzzle: Puzzle = {
+        name: "test",
         board: [
             " ", " ", " ", " ", " ",
             " ", "X", " ", "O", "O",
@@ -78,7 +79,6 @@ test("move brick", () => {
         ],
         uw: 5,
         uh: 4,
-        move: () => {},
     }
 
     moveBrick(puzzle, 8, "W", 1)

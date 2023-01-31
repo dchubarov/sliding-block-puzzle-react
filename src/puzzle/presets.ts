@@ -3,7 +3,6 @@ import Puzzle from "./puzzle";
 const PuzzlePresets = {
     huarong(): Partial<Puzzle> {
         return {
-            uw: 4,
             board: [
                 "A", "B", "B", "C",
                 "A", "B", "B", "C",
@@ -11,6 +10,7 @@ const PuzzlePresets = {
                 "D", "G", "H", "F",
                 "I", " ", " ", "J",
             ],
+            uw: 4,
         }
     },
 

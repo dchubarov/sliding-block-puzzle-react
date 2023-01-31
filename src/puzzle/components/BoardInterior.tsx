@@ -26,7 +26,7 @@ const BoardGrid = styled.div<Props>`
   `}
 `
 
-const BoardGridBrickCell = styled.div`
+const BoardGridBrickCell = styled.div<{ puzzle: Puzzle, brick: BoardElement, index: number }>`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -50,7 +50,7 @@ const BoardInterior = forwardRef<HTMLDivElement, Props>((props, ref) => {
         <BoardGrid ref={ref} {...props}>
             {props.puzzle.board.map((brick, index) => isEmptyCell(brick) ?
                 <BoardGridEmptyCell key={`cell-${index}`}/> :
-                <BoardGridBrickCell key={`cell-${index}`}>
+                <BoardGridBrickCell key={`cell-${index}`} puzzle={props.puzzle} brick={brick} index={0}>
                     {brick}
                 </BoardGridBrickCell>
             )}

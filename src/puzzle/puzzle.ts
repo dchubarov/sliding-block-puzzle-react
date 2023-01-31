@@ -3,12 +3,20 @@ export type BoardElements = Array<BoardElement>
 
 export type BrickMovementDirection = "N" | "W" | "S" | "E"
 
+export interface BrickStyleOptions {
+    backgroundColor?: string
+    backgroundImage?: string
+    showContents?: boolean
+}
+
 export default interface Puzzle {
+    name: string
     board: BoardElements
     uw: number
     uh: number
+    moveCount?: number
 
-    move(index: number, direction: BrickMovementDirection, amount: number): void
+    move?(index: number, direction: BrickMovementDirection, amount: number): void
 }
 
 export function isEmptyBoardElement(s: BoardElement) {

@@ -87,7 +87,7 @@ const Board: FC<Props> = ({puzzle, fitWidth, fitHeight}) => {
         const handleMouseUp = (e: MouseEvent) => {
             e.preventDefault();
             if (moveDirection && moveAmount > 0) {
-                puzzle.move(slideState.cellIndex, moveDirection, moveAmount);
+                puzzle.move!(slideState.cellIndex, moveDirection, moveAmount);
             }
             setSlideState(undefined);
         }

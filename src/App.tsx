@@ -1,8 +1,9 @@
-import {FC} from 'react';
+import {FC, useState} from 'react';
 import styled from "styled-components";
 import {useResizeDetector} from "react-resize-detector";
 import Board from "./puzzle/components/Board";
-import {usePuzzle} from "./puzzle";
+import {usePuzzlePreset} from "./puzzle";
+import {PuzzlePresetName} from "./puzzle/presets";
 
 const Container = styled.div`
   top: 2rem;
@@ -17,11 +18,12 @@ const Container = styled.div`
 
 const App: FC = () => {
     const {width, height, ref} = useResizeDetector();
-    const puzzle = usePuzzle();
+    const [preset, ] = useState<PuzzlePresetName>("huarong")
+    const puzzle = usePuzzlePreset(preset);
 
     return (
         <Container ref={ref}>
-            {(!!width && !!height) && <Board puzzle={puzzle} fitWidth={width} fitHeight={height}/>}
+            {(puzzle && !!width && !!height) && <Board puzzle={puzzle} fitWidth={width} fitHeight={height}/>}
         </Container>
     );
 }

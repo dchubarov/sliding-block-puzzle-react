@@ -3,6 +3,7 @@ import Puzzle from "./puzzle";
 const PuzzlePresets = {
     huarong(): Partial<Puzzle> {
         return {
+            uw: 4,
             board: [
                 "A", "B", "B", "C",
                 "A", "B", "B", "C",
@@ -10,7 +11,12 @@ const PuzzlePresets = {
                 "D", "G", "H", "F",
                 "I", " ", " ", "J",
             ],
-            uw: 4,
+            boardStyle: {
+                backgroundImage: "board.png",
+            },
+            brickStyle: {
+                showContents: true,
+            }
         }
     },
 
@@ -24,6 +30,12 @@ const PuzzlePresets = {
         return {
             uw: 4,
             board: generateRandomBoard(),
+            brickStyle: {
+                foregroundColor: "#C5EAFF",
+                backgroundImage: "brick.png",
+                backgroundColor: "transparent",
+                showContents: true,
+            }
         }
     }
 }

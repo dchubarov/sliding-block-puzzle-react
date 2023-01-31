@@ -14,9 +14,7 @@ export function usePuzzle(init: Partial<Puzzle> | (() => Partial<Puzzle>), name?
 
     return {
         ...initialPuzzle,
-
         name: name ?? "unknown",
-
         board: board,
         uw: initialPuzzle.uw ?? board.length / initialPuzzle.uh!,
         uh: initialPuzzle.uh ?? board.length / initialPuzzle.uw!,

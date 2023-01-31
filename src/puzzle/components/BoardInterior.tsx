@@ -20,20 +20,48 @@ const BoardGrid = styled.div<Props>`
     pointer-events: none;
     background: ${process.env.REACT_APP_DEBUG === 'true' ? 'rgba(255, 0, 0, 0.5)' : 'transparent'};
   ` : css`
-    background-image: url("/puzzle/huarong/board.png");
+    background-color: ${props.puzzle.boardStyle?.backgroundColor ?? "#ddd"};
+    background-image: ${props.puzzle.boardStyle?.backgroundImage ? `url("${process.env.PUBLIC_URL}/puzzle/${props.puzzle.name}/${props.puzzle.boardStyle.backgroundImage}")` : "none"};
     background-repeat: no-repeat;
     background-size: cover;
   `}
 `
 
-const BoardGridBrickCell = styled.div<{ puzzle: Puzzle, brick: BoardElement, index: number }>`
+interface BoardGridBrickProps {
+    puzzle: Puzzle
+    brick: BoardElement
+    index: number
+}
+
+function brickShowContent(props: BoardGridBrickProps) {
+    const s = (typeof props.puzzle.brickStyle === "function") ?
+        props.puzzle.brickStyle(props.brick, props.index) :
+        props.puzzle.brickStyle;
+
+    return s?.showContents || false;
+}
+
+function brickCellStyle(props: BoardGridBrickProps) {
+    const s = (typeof props.puzzle.brickStyle === "function") ?
+        props.puzzle.brickStyle(props.brick, props.index) :
+        props.puzzle.brickStyle;
+
+    return css`
+      color: ${s?.foregroundColor ?? "#000"};
+      background-color: ${s?.backgroundColor ?? "#bbb"};
+      background-image: ${s?.backgroundImage ? `url("${process.env.PUBLIC_URL}/puzzle/${props.puzzle.name}/${s.backgroundImage}")` : "none"};
+      background-repeat: no-repeat;
+      background-size: cover;
+    `
+}
+
+const BoardGridBrickCell = styled.div<BoardGridBrickProps>`
   display: flex;
   align-items: center;
   justify-content: center;
   pointer-events: none; // crucial for correct mouse events handling in Board
-  
-  background-color: #bbb;
   font-size: 3rem;
+  ${props => brickCellStyle(props)}
 `
 
 const BoardGridEmptyCell = styled.div`
@@ -48,12 +76,14 @@ const BoardInterior = forwardRef<HTMLDivElement, Props>((props, ref) => {
 
     return (
         <BoardGrid ref={ref} {...props}>
-            {props.puzzle.board.map((brick, index) => isEmptyCell(brick) ?
-                <BoardGridEmptyCell key={`cell-${index}`}/> :
-                <BoardGridBrickCell key={`cell-${index}`} puzzle={props.puzzle} brick={brick} index={0}>
-                    {brick}
-                </BoardGridBrickCell>
-            )}
+            {props.puzzle.board.map((brick, index) => {
+                const brickProps = {puzzle: props.puzzle, brick: brick, index: /*TODO local index*/0};
+                return isEmptyCell(brick) ?
+                    <BoardGridEmptyCell key={`cell-${index}`}/> :
+                    <BoardGridBrickCell key={`cell-${index}`} {...brickProps}>
+                        {brickShowContent(brickProps) && brick}
+                    </BoardGridBrickCell>
+            })}
         </BoardGrid>
     )
 });

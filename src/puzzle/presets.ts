@@ -41,12 +41,12 @@ const PuzzlePresets = {
         return {
             uw: 4,
             board: generateRandomBoard(),
-            brickStyle: {
+            brickStyle: (brick: BoardElement) => ({
                 foregroundColor: "#454545",
-                backgroundImage: "tile.png",
+                backgroundImage: ["1", "3", "6", "8", "9", "11", "14"].includes(brick ?? "") ? "red.png" : "white.png",
                 backgroundColor: "transparent",
                 showContents: true,
-            }
+            })
         }
     }
 }

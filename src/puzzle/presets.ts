@@ -1,21 +1,32 @@
-import Puzzle from "./puzzle";
+import Puzzle, {BoardElement} from "./puzzle";
 
 const PuzzlePresets = {
     huarong(): Partial<Puzzle> {
         return {
             uw: 4,
             board: [
-                "A", "B", "B", "C",
-                "A", "B", "B", "C",
-                "D", "E", "E", "F",
-                "D", "G", "H", "F",
-                "I", " ", " ", "J",
+                "ZF", "CC", "CC", "MC",
+                "ZF", "CC", "CC", "MC",
+                "ZY", "GY", "GY", "HZ",
+                "ZY", "S1", "S2", "HZ",
+                "S3", "  ", "  ", "S4",
             ],
             boardStyle: {
                 backgroundImage: "board.png",
             },
-            brickStyle: {
-                showContents: true,
+            brickStyle: (brick: BoardElement) => {
+                let bi;
+                if (brick) {
+                    if (brick.startsWith("S"))
+                        bi = "s.png";
+                    else
+                        bi = `${brick.toLowerCase()}.png`
+                }
+                return {
+                    backgroundColor: "transparent",
+                    backgroundImage: bi,
+                    showContents: false,
+                }
             }
         }
     },

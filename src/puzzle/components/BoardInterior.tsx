@@ -1,6 +1,6 @@
 import {forwardRef} from "react";
 import styled, {css} from "styled-components";
-import Puzzle, {BoardElement, isEmptyBoardElement} from "../puzzle";
+import Puzzle, {BoardElement, brickIndexToInnerCoordinates, isEmptyBoardElement} from "../puzzle";
 
 interface Props {
     puzzle: Puzzle
@@ -31,11 +31,12 @@ interface BoardGridBrickProps {
     puzzle: Puzzle
     brick: BoardElement
     index: number
+    cellSize: number
 }
 
 function brickShowContent(props: BoardGridBrickProps) {
     const s = (typeof props.puzzle.brickStyle === "function") ?
-        props.puzzle.brickStyle(props.brick, props.index) :
+        props.puzzle.brickStyle(props.brick) :
         props.puzzle.brickStyle;
 
     return s?.showContents || false;
@@ -43,15 +44,19 @@ function brickShowContent(props: BoardGridBrickProps) {
 
 function brickCellStyle(props: BoardGridBrickProps) {
     const s = (typeof props.puzzle.brickStyle === "function") ?
-        props.puzzle.brickStyle(props.brick, props.index) :
+        props.puzzle.brickStyle(props.brick) :
         props.puzzle.brickStyle;
+
+    const [bx, by, bw, bh] = brickIndexToInnerCoordinates(props.puzzle, props.brick, props.index);
 
     return css`
       color: ${s?.foregroundColor ?? "#000"};
       background-color: ${s?.backgroundColor ?? "#bbb"};
       background-image: ${s?.backgroundImage ? `url("${process.env.PUBLIC_URL}/puzzle/${props.puzzle.name}/${s.backgroundImage}")` : "none"};
+      background-size: ${props.cellSize * (bw ?? 1)}px ${props.cellSize * (bh ?? 1)}px;
+      background-position-x: ${-props.cellSize * (bx ?? 0)}px;
+      background-position-y: ${-props.cellSize * (by ?? 0)}px;
       background-repeat: no-repeat;
-      background-size: cover;
     `
 }
 
@@ -77,7 +82,13 @@ const BoardInterior = forwardRef<HTMLDivElement, Props>((props, ref) => {
     return (
         <BoardGrid ref={ref} {...props}>
             {props.puzzle.board.map((brick, index) => {
-                const brickProps = {puzzle: props.puzzle, brick: brick, index: /*TODO local index*/0};
+                const brickProps = {
+                    puzzle: props.puzzle,
+                    brick: brick,
+                    index: index,
+                    cellSize: props.cellSize
+                };
+
                 return isEmptyCell(brick) ?
                     <BoardGridEmptyCell key={`cell-${index}`}/> :
                     <BoardGridBrickCell key={`cell-${index}`} {...brickProps}>

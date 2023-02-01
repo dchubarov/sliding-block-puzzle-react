@@ -1,3 +1,4 @@
+
 export type BoardElement = string | undefined
 export type BoardElements = Array<BoardElement>
 
@@ -22,7 +23,8 @@ export default interface Puzzle {
     uh: number
     moveCount?: number
     boardStyle?: BoardStyleOptions
-    brickStyle?: BrickStyleOptions | ((brick: BoardElement, index: number) => BrickStyleOptions),
+    brickStyle?: BrickStyleOptions | ((brick: BoardElement, index?: number) => BrickStyleOptions),
+
     move?(index: number, direction: BrickMovementDirection, amount: number): void,
 }
 
@@ -40,6 +42,41 @@ function brickIndexToCoordinates(puzzle: Puzzle, index: number) {
     return (index >= 0 && index < puzzle.board.length) ?
         [index % puzzle.uw, Math.floor(index / puzzle.uw)] :
         [undefined, undefined];
+}
+
+export function brickBounds(puzzle: Puzzle, brick: BoardElement) {
+    let left = undefined, top = undefined, right = undefined, bottom = undefined
+
+    for (let i = 0; i < puzzle.board.length; i++) {
+        if (puzzle.board[i] === brick) {
+            const [col, row] = brickIndexToCoordinates(puzzle, i);
+            left = Math.min(left ?? puzzle.uw, col!);
+            right = Math.max(right ?? -1, col!);
+            top = Math.min(top ?? puzzle.uh, row!);
+            bottom = Math.max(bottom ?? -1, row!);
+        }
+    }
+
+    if (left !== undefined && right !== undefined && top !== undefined && bottom !== undefined) {
+        return [left, top, right, bottom]
+    }
+
+    return [undefined, undefined, undefined, undefined]
+}
+
+export function brickIndexToInnerCoordinates(puzzle: Puzzle, brick: BoardElement, index: number) {
+    if (index >= 0 && index < puzzle.board.length && puzzle.board[index] === brick) {
+        const [left, top, right, bottom] = brickBounds(puzzle, brick);
+        if (left !== undefined && top !== undefined && right !== undefined && bottom !== undefined) {
+            const [col, row] = brickIndexToCoordinates(puzzle, index);
+            if (col !== undefined && col >= left && col <= right &&
+                row !== undefined && row >= top && row <= bottom) {
+                return [col - left, row - top, right - left + 1, bottom - top + 1];
+            }
+        }
+    }
+
+    return [undefined, undefined, undefined, undefined];
 }
 
 export function brickCanMove(puzzle: Puzzle, index: number, direction: BrickMovementDirection): number {

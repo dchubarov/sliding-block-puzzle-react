@@ -1,4 +1,4 @@
-import Puzzle, {brickCanMove, moveBrick} from "./puzzle";
+import Puzzle, {brickBounds, brickCanMove, brickIndexToInnerCoordinates, moveBrick} from "./puzzle";
 
 test("simple brick movability", () => {
     const puzzle: Puzzle = {
@@ -90,4 +90,32 @@ test("move brick", () => {
         ' ', ' ', 'O', 'O', ' ',
         ' ', ' ', ' ', ' ', ' '
     ]);
+});
+
+test("brick bounds and inner coordinates", () => {
+    const puzzle: Puzzle = {
+        name: "test",
+        board: [
+            "X", "Y", " ", " ", " ", "Y",
+            " ", " ", " ", " ", " ", " ",
+            " ", " ", " ", " ", " ", " ",
+            " ", " ", " ", "Y", " ", " ",
+            " ", " ", " ", " ", " ", "Z",
+
+        ],
+        uw: 6,
+        uh: 5,
+    }
+
+    expect(brickBounds(puzzle, "*")).toStrictEqual([undefined, undefined, undefined, undefined]);
+    expect(brickBounds(puzzle, "X")).toStrictEqual([0, 0, 0, 0]);
+    expect(brickBounds(puzzle, "Y")).toStrictEqual([1, 0, 5, 3]);
+    expect(brickBounds(puzzle, "Z")).toStrictEqual([5, 4, 5, 4]);
+
+    expect(brickIndexToInnerCoordinates(puzzle, "X", 0)).toStrictEqual([0, 0]);
+    expect(brickIndexToInnerCoordinates(puzzle, "Y", 1)).toStrictEqual([0, 0]);
+    expect(brickIndexToInnerCoordinates(puzzle, "Y", 9)).toStrictEqual([undefined, undefined]);
+    expect(brickIndexToInnerCoordinates(puzzle, "Y", 5)).toStrictEqual([4, 0]);
+    expect(brickIndexToInnerCoordinates(puzzle, "Y", 21)).toStrictEqual([2, 3]);
+    expect(brickIndexToInnerCoordinates(puzzle, "Z", 29)).toStrictEqual([0, 0]);
 });

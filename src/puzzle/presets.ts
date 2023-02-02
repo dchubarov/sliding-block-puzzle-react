@@ -1,6 +1,25 @@
 import Puzzle, {BoardElement} from "./puzzle";
 
 const PuzzlePresets = {
+    fifteen(): Partial<Puzzle> {
+        const generateRandomBoard = () => {
+            const b = [...Array(16).keys()].map(value => value === 0 ? " " : value.toString());
+            b.sort(() => 0.5 - Math.random());
+            return b;
+        }
+
+        return {
+            uw: 4,
+            board: generateRandomBoard(),
+            brickStyle: (brick: BoardElement) => ({
+                foregroundColor: "#454545",
+                backgroundImage: ["1", "3", "6", "8", "9", "11", "14"].includes(brick ?? "") ? "red.png" : "white.png",
+                backgroundColor: "transparent",
+                showContents: true,
+            })
+        }
+    },
+
     huarong(): Partial<Puzzle> {
         return {
             uw: 4,
@@ -31,24 +50,24 @@ const PuzzlePresets = {
         }
     },
 
-    fifteen(): Partial<Puzzle> {
-        const generateRandomBoard = () => {
-            const b = [...Array(16).keys()].map(value => value === 0 ? " " : value.toString());
-            b.sort(() => 0.5 - Math.random());
-            return b;
-        }
-
+    layton(): Partial<Puzzle> {
         return {
-            uw: 4,
-            board: generateRandomBoard(),
-            brickStyle: (brick: BoardElement) => ({
-                foregroundColor: "#454545",
-                backgroundImage: ["1", "3", "6", "8", "9", "11", "14"].includes(brick ?? "") ? "red.png" : "white.png",
-                backgroundColor: "transparent",
+            uw: 6,
+            board: [
+                "_", "_", " ", " ", "_", "_",
+                "_", "_", " ", " ", "_", "_",
+                "A", "A", "A", " ", "B", "B",
+                "_", " ", "C", "C", "B", "_",
+                " ", "D", "D", "E", "E", " ",
+                "F", "F", "D", "E", "G", "G",
+                "F", " ", "*", "*", " ", "G",
+                " ", " ", "*", "*", " ", " ",
+            ],
+            brickStyle: {
                 showContents: true,
-            })
+            }
         }
-    }
+    },
 }
 
 export type PuzzlePresetName = keyof typeof PuzzlePresets;

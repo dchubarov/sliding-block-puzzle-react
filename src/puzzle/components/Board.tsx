@@ -25,6 +25,8 @@ const Board: FC<Props> = ({puzzle, fitWidth, fitHeight}) => {
 
     const cellSize = Math.min(Math.ceil(fitWidth / puzzle.uw), Math.ceil(fitHeight / puzzle.uh));
 
+    // TODO use pointerevents instead on mouseevents to handle both mouse and gestures
+
     useEffect(() => {
         const element = baseRef.current
         if (!element) return;
